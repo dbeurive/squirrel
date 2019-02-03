@@ -6,10 +6,12 @@ The configuration file contains a JSON encoded data structure, which description
 
 ## Log file section
 
+
     "log": {
         "directory": "/path/to/the/local/directory/that/contains/the/log/file",
         "name": "name"
     }
+
 
 * `log.directory`: path to the local directory used to store the LOG file.
 * `log.name`: name of the LOG file.
@@ -45,6 +47,7 @@ A logical destination is defined by:
           "retry": <number_of_attempted_retries>,
           "sleep": <number_of_seconds_between_to_attempted_retries>
     }
+
    
 * `host`: a remote host (identified by its name or its IP address).
 * `user`: an FTP user.
@@ -59,6 +62,7 @@ A logical destination is defined by:
 
 This section lists the backup tasks that can be performed.
 
+
     "tasks": {
         "name_of_the_task": {
           "local-input-directory": "/path/to/the/local/directory/that/contains/the/files/to/backup",
@@ -69,6 +73,7 @@ This section lists the backup tasks that can be performed.
           "on-error": "error_handler",
           "on-success": "success_handler"
         }
+
 
 * `local-input-directory`: path to the local directory where to look for files to backup.
 * `local-done-directory`: path to the local directory where to move a file after it has been successfully backed up.
