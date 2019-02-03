@@ -37,6 +37,7 @@ Setup the configuration (see [this link](config/README.md)).
 Then you can run the script:
 
     php squirrel.php [(--config|-c) /path/to/the/config/file] \
-        [(--task|-t) <name of the task to execute>] \
-        [(--verbose|-v)] 
+        [(--verbose|-v)] \
+        (--task|-t) <name of the task to execute>
+        
         
