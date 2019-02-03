@@ -6,6 +6,7 @@ The configuration file contains a JSON encoded data structure, which description
 
 ## Log file section
 
+Structure:
 
     "log": {
         "directory": "/path/to/the/local/directory/that/contains/the/log/file",
@@ -35,7 +36,7 @@ A logical destination is defined by:
   * The number of attempted retries for every FTP commands (including the connexion) before the script gives up.
   * The number of seconds between to attempted retries.
 
-
+Structure:
 
     "destinations": {
        "logical_name_of_the_destination": {
@@ -63,6 +64,7 @@ A logical destination is defined by:
 
 This section lists the backup tasks that can be performed.
 
+Structure:
 
     "tasks": {
         "name_of_the_task": {
