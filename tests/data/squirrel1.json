@@ -1,0 +1,48 @@
+{
+  "log": {
+    "directory": "/tmp",
+    "name": "squirrel.log"
+  },
+  "destinations": {
+    "server1": {
+      "host": "host1",
+      "user": "user1",
+      "password": "password1",
+      "port": 21,
+      "path": "/files/backups1",
+      "timeout": 60,
+      "sleep": 1,
+      "retry": 3
+    },
+    "server2": {
+      "host": "host2",
+      "user": "user2",
+      "password": "password2",
+      "port": 210,
+      "path": "/files/backups2",
+      "timeout": 600,
+      "sleep": 10,
+      "retry": 30
+    }
+  },
+  "tasks": {
+    "task1": {
+      "local-input-directory": "/home/task1/backups",
+      "local-done-directory": "/home/task1/backups-done",
+      "file-id": "mask1",
+      "keep-count": 10,
+      "destinations": ["server1", "server2"],
+      "on-error": "on-error1",
+      "on-success": "on-success1"
+    },
+    "task2": {
+      "local-input-directory": "${__DIR__}/backups",
+      "local-done-directory": "${__DIR__}/done",
+      "file-id": "mask2",
+      "keep-count": 100,
+      "destinations": ["server1"],
+      "on-error": "on-error2",
+      "on-success": "on-success2"
+    }
+  }
+}

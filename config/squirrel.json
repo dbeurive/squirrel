@@ -1,0 +1,48 @@
+{
+  "log": {
+    "directory": "${__DIR__}/../log",
+    "name": "squirrel.log"
+  },
+  "destinations": {
+    "ovh1": {
+        "host": "1.2.3.4",
+        "user": "ftpuser",
+        "password": "pass1",
+        "port": 21,
+        "path": "backups/files",
+        "timeout": 2,
+        "retry": 3,
+        "sleep": 1
+    },
+    "ovh2": {
+        "host": "2.3.4.5",
+        "user": "ftpuser",
+        "password": "pass2",
+        "port": 21,
+        "path": "backups/other-files",
+        "timeout": 2,
+        "retry": 3,
+        "sleep": 1
+    }
+  },
+  "tasks": {
+    "wiki": {
+      "local-input-directory": "${__DIR__}/../tests/ftp-input",
+      "local-done-directory": "${__DIR__}/../tests/ftp-done",
+      "file-id": "file1.txt",
+      "keep-count": 2,
+      "destinations": ["ovh1", "ovh2"],
+      "on-error": "",
+      "on-success": ""
+    },
+    "database": {
+      "local-input-directory": "${__DIR__}/../tests/ftp-input",
+      "local-done-directory": "${__DIR__}/../tests/ftp-done",
+      "file-id": "other-file1.txt",
+      "keep-count": 2,
+      "destinations": ["ovh1", "ovh2"],
+      "on-error": "",
+      "on-success": ""
+    }
+  }
+}

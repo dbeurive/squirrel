@@ -1,0 +1,36 @@
+{
+  "log": {
+    "directory": "/tmp",
+    "name": "squirrel.log"
+  },
+  "destinations": {
+    "server1": {
+      "host": "host1",
+      "user": "user1",
+      "password": "password1",
+      "path": "/files/backups1"
+    },
+    "server2": {
+      "host": "host2",
+      "user": "user2",
+      "password": "password2",
+      "path": "/files/backups2"
+    }
+  },
+  "tasks": {
+    "task1": {
+      "local-input-directory": "/home/task1/backups",
+      "local-done-directory": "/home/task1/backups-done",
+      "file-id": "mask1",
+      "keep-count": 10,
+      "destinations": ["server1", "server2"]
+    },
+    "task2": {
+      "local-input-directory": "/home/task2/backups",
+      "local-done-directory": "/home/task2/backups-done",
+      "file-id": "mask2",
+      "keep-count": 10,
+      "destinations": ["server1"]
+    }
+  }
+}
