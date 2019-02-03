@@ -34,8 +34,9 @@ A logical destination is defined by:
   * The connexion timeout.
   * The number of attempted retries for every FTP commands (including the connexion) before the script gives up.
   * The number of seconds between to attempted retries.
-  
-  
+
+
+
     "destinations": {
        "logical_name_of_the_destination": {
           "host": "network_host",
