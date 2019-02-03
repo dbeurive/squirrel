@@ -12,7 +12,11 @@ This repository contains a script that performs backups over FTP.
 
 ## Installation
 
-Clone this repository (or download the ZIP archive).
+Clone this repository.
+
+    git clone https://github.com/dbeurive/squirrel.git
+    
+> You can also download the [ZIP archive](https://github.com/dbeurive/squirrel/archive/master.zip).
 
 Go the the directory `squirrel`.
 
