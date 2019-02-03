@@ -77,7 +77,7 @@ if (! $config->isTaskConfigured($arg_task)) {
 $timestamp = strftime('%Y%m%d');
 $log = $config->getLog();
 $log_path = sprintf('%s%s%s-%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $timestamp, $log->getName());
-$logger = new Logger($log_path, Logger::LEVEL_INFO);
+$logger = new Logger($log_path, Logger::getLevelFromName($config->getLog()->getLevel()));
 
 // ---------------------------------------------
 // Get the task to execute.
