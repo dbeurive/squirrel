@@ -10,16 +10,35 @@ Structure:
 
     "log": {
         "directory": "/path/to/the/local/directory/that/contains/the/log/file",
-        "name": "name"
+        "name": <name_of_the_file>,
+        "level": <log_level>
     }
 
 
 * `log.directory`: path to the local directory used to store the LOG file.
 * `log.name`: name of the LOG file.
+* `level`: the LOG level. This value can be:
+  * "FATAL": only messages tagged "FATAL" will be printed to the LOG file.
+  * "ERROR": only messages tagged "FATAL" and "ERROR" will be printed to the LOG file.
+  * "WARNING": only messages tagged "FATAL", "ERROR" and "WARNING" will be printed to the LOG file.
+  * "SUCCESS": only messages tagged "FATAL", "ERROR", "WARNING" and "SUCCESS" will be printed to the LOG file.
+  * "INFO": only messages tagged "FATAL", "ERROR", "WARNING", "SUCCESS" and "INFO" will be printed to the LOG file. **This is the default value**.
+  * "DATA": only messages tagged "FATAL", "ERROR", "WARNING", "SUCCESS", "INFO" and "DATA" will be printed to the LOG file.
+  * "DEBUG": all messages will be printed to the LOG file.
 
-When the LOG file is created, it is prefixed by the date of the day "`YYYYMMDD`".
+When the LOG file is created, it is prefixed by the date of the day "`YYYYMMDD`". With:
+
+* `YYYY`: four-digit representation for the year.
+* `MM`: two-digit representation of the month (with leading zeros).
+* `DD`: two-digit representation of the day of the month (with leading zeros).
 
 > Please note that you can use the string "`${__DIR__}`" within the directory path to refer to the directory where the configuration file resides.
+
+> Please note that the LOG file is opened and closed each time a message is added to the file.
+> Relatively to performance, this strategy is not the best one.
+> However, it makes the management of LOG files easier.
+> If you've ever faced a _dereferenced file_, then you understand why.
+> And, by the way, for a backup tool that uses FTP, logging performance is not an issue.
 
 ## Destination section
 
