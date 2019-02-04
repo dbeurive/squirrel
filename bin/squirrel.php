@@ -11,6 +11,8 @@ define('DEFAULT_CONFIGURATION', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY
 define('ARG_TASK', 'task');
 define('ARG_CONF', 'config');
 define('ARG_VERBOSE', 'verbose');
+define('ARG_LIST_TASKS', 'list_tasks');
+define('ARG_LIST_DESTINATIONS', 'list_destinations');
 
 // ---------------------------------------------
 // Parse the command line.
@@ -32,14 +34,25 @@ $climate->arguments->add(array(
         'prefix'       => 't',
         'longPrefix'   => 'task',
         'description'  => 'Task to perform.',
-        'required'     => true
+        'required'     => false
     ),
     ARG_VERBOSE => array(
         'prefix'       => 'v',
         'longPrefix'   => 'verbose',
         'description'  => 'Activate the verbose mode.',
         'noValue'      => true
-    )
+    ),
+    ARG_LIST_TASKS => array(
+        'longPrefix'   => 'ls-task',
+        'description'  => 'List all available tasks',
+        'noValue'      => true
+    ),
+    ARG_LIST_DESTINATIONS => array(
+        'longPrefix'   => 'ls-dest',
+        'description'  => 'List all available destinations',
+        'noValue'      => true
+    ),
+
 ));
 
 try {
@@ -48,9 +61,23 @@ try {
     fatal_error($e->getMessage());
 }
 
-$arg_task = $climate->arguments->get(ARG_TASK);
-$arg_conf = $climate->arguments->get(ARG_CONF);
+$arg_task    = $climate->arguments->get(ARG_TASK);
+$arg_conf    = $climate->arguments->get(ARG_CONF);
 $arg_verbose = $climate->arguments->get(ARG_VERBOSE);
+$arg_ls_task = $climate->arguments->get(ARG_LIST_TASKS);
+$arg_ls_dest = $climate->arguments->get(ARG_LIST_DESTINATIONS);
+
+// ---------------------------------------------
+// Check command line consistency.
+// ---------------------------------------------
+
+if (is_null($arg_task) && is_null($arg_ls_task) && is_null($arg_ls_dest)) {
+    fatal_error('Invalid command line ! You must specify one of these actions: --task <name>, --ls-task or --ls-dest.');
+}
+
+if ((is_null($arg_task) ? 0 : 1) + (is_null($arg_ls_task) ? 0 : 1) + (is_null($arg_ls_dest) ? 0 : 1) > 1) {
+    fatal_error('Invalid command line ! Actions --task <name>, --ls-task or --ls-dest are exclusive.');
+}
 
 // ---------------------------------------------
 // Load the configuration.
@@ -60,6 +87,20 @@ try {
     $config = new Configuration($arg_conf, realpath(dirname($arg_conf)));
 } catch (\Exception $e) {
     fatal_error($e->getMessage());
+}
+
+// ---------------------------------------------
+// Run secondary actions.
+// ---------------------------------------------
+
+if (! is_null($arg_ls_task)) {
+    ls_task($config);
+    exit(0);
+}
+
+if (! is_null($arg_ls_dest)) {
+    ls_dest($config);
+    exit(0);
 }
 
 // ---------------------------------------------
@@ -215,6 +256,26 @@ foreach ($task->getDestinations() as $_destination) {
 }
 
 info('Done');
+
+/**
+ * Print the list of available tasks.
+ * @param Configuration $in_config The main configuration.
+ */
+function ls_task(Configuration $in_config) {
+    global $climate;
+    $tasks = $in_config->getTasks();
+    $climate->out(implode("\n", array_keys($tasks)));
+}
+
+/**
+ * Print the list of available destination.
+ * @param Configuration $in_config The main configuration.
+ */
+function ls_dest(Configuration $in_config) {
+    global $climate;
+    $destinations = $in_config->getDestinations();
+    $climate->out(implode("\n", array_keys($destinations)));
+}
 
 /**
  * Report an information.
