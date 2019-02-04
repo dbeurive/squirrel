@@ -20,6 +20,7 @@ class Configuration
     const KEY_DESTINATIONS = 'destinations';
     const KEY_TASKS = 'tasks';
     const KEY_LOG = 'log';
+    const KEY_LOG_FILE_TIMESTAMPED = 'file-timestamped';
     const KEY_DIRECTORY = 'directory';
     const KEY_LEVEL = 'level';
     const KEY_NAME = 'name';
@@ -45,6 +46,7 @@ class Configuration
     const VALUE_DEFAULT_ON_ERROR = '';
     const VALUE_DEFAULT_ON_SUCCESS = '';
     const VALUE_DEFAULT_LOG_LEVEL = 'INFO';
+    const VALUE_DEFAULT_LOG_FILE_TIMESTAMPED = false;
 
     /** @var array Internal representation of the configuration. */
     private $__configuration;
@@ -405,9 +407,10 @@ class Configuration
      * @return Log The specification for the LOG file.
      */
     public function __createLog() {
-        return new Log($this->__configuration[self::KEY_LOG][self::KEY_DIRECTORY],
+        return new Log(realpath($this->__configuration[self::KEY_LOG][self::KEY_DIRECTORY]),
             $this->__configuration[self::KEY_LOG][self::KEY_NAME],
-            $this->__configuration[self::KEY_LOG][self::KEY_LEVEL]);
+            Logger::getLevelFromName($this->__configuration[self::KEY_LOG][self::KEY_LEVEL]),
+            $this->__configuration[self::KEY_LOG][self::KEY_LOG_FILE_TIMESTAMPED]);
     }
 
     /**
@@ -500,6 +503,7 @@ class Configuration
         );
         $optional_log_tags = array(
             self::KEY_LEVEL => array('value' => self::VALUE_DEFAULT_LOG_LEVEL, 'validator' => '__validatorIsLogLevel'),
+            self::KEY_LOG_FILE_TIMESTAMPED => array('value' => self::VALUE_DEFAULT_LOG_FILE_TIMESTAMPED, 'validator' => '__validatorIsBoolean'),
         );
 
         /**
@@ -770,12 +774,21 @@ class Configuration
      * @return bool If the given value is a LOG level, then the method returns the integer value that represents the level.
      *         Otherwise, it returns the value false.
      */
-
     private function __validatorIsLogLevel($in_value) {
         if (! is_string($in_value)) {
             return false;
         }
         return (false !== Logger::getLevelFromName($in_value));
+    }
+
+    /**
+     * Validator: check that a given value is a boolean.
+     * @param string $in_value Value to test.
+     * @return bool If the given value is a boolean, then the method returns the value true.
+     *         Otherwise, it returns the value false.
+     */
+    private function __validatorIsBoolean($in_value) {
+        return is_bool($in_value);
     }
 
     /**

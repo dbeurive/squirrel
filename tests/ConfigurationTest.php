@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 use dbeurive\Squirrel\Configuration;
-use dbeurive\Squirrel\Exception as SquirrelException;
 use dbeurive\Squirrel\Destination;
 use dbeurive\Squirrel\Task;
 
@@ -24,6 +23,9 @@ class ConfigurationTest extends TestCase
         $t1 = $tasks['task1'];
         /** @var Task $t2 */
         $t2 = $tasks['task2'];
+
+        $log = $conf->getLog();
+
 
         $this->assertEquals($conf->getDestinationsNames(), array('server1', 'server2'));
         $this->assertEquals(array_keys($destinations), array('server1', 'server2'));
@@ -107,6 +109,13 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($conf->getTaskOnSuccess('task2'), 'on-success2');
         $this->assertEquals($t1->getOnSuccess(), 'on-success1');
         $this->assertEquals($t2->getOnSuccess(), 'on-success2');
+
+        // ------------------------------------------------
+
+        $this->assertEquals($log->getDirectory(), '/tmp');
+        $this->assertEquals($log->getLevel(), \dbeurive\Log\Logger::LEVEL_INFO);
+        $this->assertEquals($log->getName(), "squirrel.log");
+        $this->assertTrue($log->fileTimestamped());
     }
 
     public function testConstructOk2() {
@@ -124,6 +133,8 @@ class ConfigurationTest extends TestCase
         $t1 = $tasks['task1'];
         /** @var Task $t2 */
         $t2 = $tasks['task2'];
+
+        $log = $conf->getLog();
 
         $this->assertEquals($conf->getDestinationPort('server1'), Configuration::VALUE_DEFAULT_PORT);
         $this->assertEquals($conf->getDestinationPort('server2'), Configuration::VALUE_DEFAULT_PORT);
@@ -156,5 +167,8 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($conf->getTaskOnSuccess('task2'), Configuration::VALUE_DEFAULT_ON_SUCCESS);
         $this->assertEquals($t1->getOnSuccess(), Configuration::VALUE_DEFAULT_ON_SUCCESS);
         $this->assertEquals($t2->getOnSuccess(), Configuration::VALUE_DEFAULT_ON_SUCCESS);
+
+        $this->assertEquals($log->getLevel(), \dbeurive\Log\Logger::LEVEL_INFO);
+        $this->assertFalse($log->fileTimestamped());
     }
 }

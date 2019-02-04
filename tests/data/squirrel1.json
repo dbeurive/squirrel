@@ -1,7 +1,9 @@
 {
   "log": {
     "directory": "/tmp",
-    "name": "squirrel.log"
+    "name": "squirrel.log",
+    "level": "INFO",
+    "file-timestamped": true
   },
   "destinations": {
     "server1": {

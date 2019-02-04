@@ -11,12 +11,13 @@ Structure:
     "log": {
         "directory": "/path/to/the/local/directory/that/contains/the/log/file",
         "name": <name_of_the_file>,
-        "level": <log_level>
+        "level": <log_level>,
+        "file-timestamped" true|false
     }
 
 
-* `log.directory`: path to the local directory used to store the LOG file.
-* `log.name`: name of the LOG file.
+* `directory`: path to the local directory used to store the LOG file.
+* `name`: name of the LOG file.
 * `level`: the LOG level. This value can be:
   * "FATAL": only messages tagged "FATAL" will be printed to the LOG file.
   * "ERROR": only messages tagged "FATAL" and "ERROR" will be printed to the LOG file.
@@ -25,6 +26,10 @@ Structure:
   * "INFO": only messages tagged "FATAL", "ERROR", "WARNING", "SUCCESS" and "INFO" will be printed to the LOG file. **This is the default value**.
   * "DATA": only messages tagged "FATAL", "ERROR", "WARNING", "SUCCESS", "INFO" and "DATA" will be printed to the LOG file.
   * "DEBUG": all messages will be printed to the LOG file.
+* `file-timestamped`: flag that indicates whether the name of the LOG file must be prefixed by the timestamp of the day or not.
+  Possible values are:
+  * `true`: the name of the file will be prefixed by the timestamp of the day "`YYMMDD`".
+  * `false`: the name of the file will **NOT** be prefixed by the timestamp of the day.
 
 When the LOG file is created, it is prefixed by the date of the day "`YYYYMMDD`". With:
 

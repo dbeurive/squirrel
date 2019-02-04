@@ -76,7 +76,14 @@ if (! $config->isTaskConfigured($arg_task)) {
 
 $timestamp = strftime('%Y%m%d');
 $log = $config->getLog();
-$log_path = sprintf('%s%s%s-%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $timestamp, $log->getName());
+$log_path = null;
+
+if ($log->fileTimestamped()) {
+    $log_path = sprintf('%s%s%s-%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $timestamp, $log->getName());
+} else {
+    $log_path = sprintf('%s%s%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $log->getName());
+}
+
 $logger = new Logger($log_path, Logger::getLevelFromName($config->getLog()->getLevel()));
 
 // ---------------------------------------------
@@ -86,6 +93,7 @@ $logger = new Logger($log_path, Logger::getLevelFromName($config->getLog()->getL
 $task = $config->getTask($arg_task);
 
 info(sprintf('Starting task "%s"', $task));
+info(sprintf('LOG file is: %s', $log_path));
 $logger->debug(sprintf('File ID = "%s".', $task->getFileId()));
 $logger->debug(sprintf('Local input directory = "%s".', $task->getLocalInputDirectory()));
 $logger->debug(sprintf('Local done directory = "%s".', $task->getLocalDoneDirectory()));
