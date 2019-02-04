@@ -84,7 +84,7 @@ if ($log->fileTimestamped()) {
     $log_path = sprintf('%s%s%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $log->getName());
 }
 
-$logger = new Logger($log_path, Logger::getLevelFromName($config->getLog()->getLevel()));
+$logger = new Logger($log_path, $config->getLog()->getLevel());
 
 // ---------------------------------------------
 // Get the task to execute.
