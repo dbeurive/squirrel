@@ -36,12 +36,6 @@ $climate->arguments->add(array(
         'description'  => 'Task to perform.',
         'required'     => false
     ),
-    ARG_VERBOSE => array(
-        'prefix'       => 'v',
-        'longPrefix'   => 'verbose',
-        'description'  => 'Activate the verbose mode.',
-        'noValue'      => true
-    ),
     ARG_LIST_TASKS => array(
         'longPrefix'   => 'ls-task',
         'description'  => 'List all available tasks',
@@ -52,7 +46,12 @@ $climate->arguments->add(array(
         'description'  => 'List all available destinations',
         'noValue'      => true
     ),
-
+    ARG_VERBOSE => array(
+        'prefix'       => 'v',
+        'longPrefix'   => 'verbose',
+        'description'  => 'Activate the verbose mode.',
+        'noValue'      => true
+    )
 ));
 
 try {
