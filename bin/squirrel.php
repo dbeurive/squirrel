@@ -94,9 +94,9 @@ $task = $config->getTask($arg_task);
 
 info(sprintf('Starting task "%s"', $task));
 info(sprintf('LOG file is: %s', $log_path));
-$logger->debug(sprintf('File ID = "%s".', $task->getFileId()));
-$logger->debug(sprintf('Local input directory = "%s".', $task->getLocalInputDirectory()));
-$logger->debug(sprintf('Local done directory = "%s".', $task->getLocalDoneDirectory()));
+info(sprintf('File ID = "%s".', $task->getFileId()));
+info(sprintf('Local input directory = "%s".', $task->getLocalInputDirectory()));
+info(sprintf('Local done directory = "%s".', $task->getLocalDoneDirectory()));
 
 // ---------------------------------------------
 // Lists the files to backup.
