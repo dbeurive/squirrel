@@ -125,13 +125,14 @@ class File
     /**
      * Given a basename, the method returns an instance of the class File.
      * @param string $in_basename The basename.
-     * @return File The method returns an instance of the class File.
+     * @return FILE Upon successful complement, the method returns an instance of the class File.
+     *         If the conversion could not be done, then the method returns the value false.
      * @throws Exception
      */
     static public function basenameToFile($in_basename) {
 
         if (! self::isBasename($in_basename)) {
-            throw new Exception(sprintf('Invalid basename "%s".', $in_basename));
+            return false;
         }
 
         $timestamp = self::getTimestampFromBasename($in_basename);
@@ -150,7 +151,10 @@ class File
         $properties = array();
         /** @var string $_basename */
         foreach ($in_basenames as $_basename) {
-            $properties[] = self::basenameToFile($_basename);
+            $file = self::basenameToFile($_basename);
+            if (false !== $file) {
+                $properties[] = $file;
+            }
         }
         return $properties;
     }
