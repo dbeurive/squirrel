@@ -198,6 +198,32 @@ class Destination
     }
 
     /**
+     * Create the directory (on the remote host) where the backups are stored.
+     * If the directory already exists, it is not created.
+     * @param string $out_message Reference to a string used to store an error message.
+     * @return bool Upon successful completion, the method returns the value true.
+     *         Otherwise, it returns the value false.
+     */
+    public function createPath(&$out_message) {
+
+        for ($i=0; $i<$this->__retry; $i++) {
+            $out_message = null;
+            try {
+                $this->__ftp->mkdirRecursiveIfNotExist($this->__path);
+            } catch (\Exception $e) {
+                $out_message = $e->getMessage();
+                if ($i < $this->__retry) { sleep($this->__sleep); }
+                continue;
+            }
+        }
+
+        if (is_null($out_message)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Close the connexion to this destination.
      * @throws \dbeurive\Ftp\Exception
      */

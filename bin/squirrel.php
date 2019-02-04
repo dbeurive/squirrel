@@ -123,7 +123,13 @@ if (count($files_to_backup)) {
 
         info(sprintf('Open a connexion to "%s"', $_destination->getName()));
         if (false === $_destination->reach($error_message)) {
-            error(sprintf('Fail to open a connexion to "%s": %s', $_destination->getName(), $error_message));
+            error(sprintf('Fail to open a connexion to "%s": %s', $_destination, $error_message));
+            $backup_status->setErrors($files_to_backup);
+            continue;
+        }
+
+        if (false === $_destination->createPath($error_message)) {
+            error(sprintf('Fail to to create the directory "%s" on the destination "%s": %s', $_destination->getPath(), $_destination, $error_message));
             $backup_status->setErrors($files_to_backup);
             continue;
         }

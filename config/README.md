@@ -75,6 +75,7 @@ Structure:
 * `password`: an FTP password.
 * `port`: the TCP port used by the FTP server.
 * `path`: the path to a directory (relatively to the FTP account) where to deposit the backed up files.
+          If the directory does not exist, then it is created.
 * `timeout`: The connexion timeout.
 * `retry`: the number of attempted retries for every FTP commands (including the connexion) before the script gives up.
 * `sleep`: the number of seconds between to attempted retries.
