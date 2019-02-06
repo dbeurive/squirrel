@@ -17,11 +17,18 @@ define('CLI_SPECIFIC_CONFIGURATION', array(
     ),
 ));
 
+/**
+ * Print the help.
+ */
+$help = function() {
+    printf("php %s <name of the task to execute>\n", basename(__FILE__));
+};
+
 // ---------------------------------------------
 // Initialise the environment.
 // ---------------------------------------------
 
-Environment::init(CLI_SPECIFIC_CONFIGURATION);
+Environment::init(CLI_SPECIFIC_CONFIGURATION, $help);
 $cla_task = Environment::getClaValue(CLA_TASK);
 $config = Environment::getConfiguration();
 
@@ -156,9 +163,5 @@ foreach ($task->getDestinations() as $_destination) {
 }
 
 Environment::info('Done');
-
-
-
-
 
 

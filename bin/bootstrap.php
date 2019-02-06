@@ -51,18 +51,23 @@ class Environment {
     static private $__configuration;
     /** @var Logger */
     static private $__logger;
+    /** @var callable */
+    static private $__help;
 
     /**
      * Initialise the environment container.
      * @param array $in_specific_args Climate specifications for the specific script.
+     * @param callable $in_help_printer Function that prints the help.
      */
-    static public function init(array $in_specific_args)
+    static public function init(array $in_specific_args, callable $in_help_printer)
     {
+        self::$__help = $in_help_printer;
+
         self::$__climate = new CLImate();
         try {
             self::$__climate->arguments->add(array_merge(CLI_COMMON_CONFIGURATION, $in_specific_args));
         } catch (\Exception $e) {
-            printf("Unexpected error: %s\n", $e->getMessage());
+            sprintf("Unexpected error: %s\n", $e->getMessage());
             exit(1);
         }
 
@@ -70,7 +75,10 @@ class Environment {
         try {
             self::$__climate->arguments->parse();
         } catch (\Exception $e) {
-            self::fatal_error($e->getMessage());
+            self::$__climate->lightRed(sprintf("Invalid command line: %s", $e->getMessage()));
+            self::$__climate->out("\nUsage:\n");
+            self::$__climate->out(call_user_func(self::$__help));
+            exit(1);
         }
 
         self::$__cloConfiguration = self::$__climate->arguments->get(CLO_CONF);
@@ -80,7 +88,8 @@ class Environment {
         try {
             self::$__configuration = new Configuration(self::$__cloConfiguration, realpath(dirname(self::$__cloConfiguration)));
         } catch (\Exception $e) {
-            self::fatal_error($e->getMessage());
+            self::$__climate->lightRed(sprintf('Invalid configuration file "%s": %s', realpath(dirname(self::$__cloConfiguration)), $e->getMessage()));
+            exit(1);
         }
 
         // Open the LOG file.
@@ -96,7 +105,7 @@ class Environment {
         try {
             self::$__logger = new Logger(self::$__logPath, self::$__configuration->getLog()->getLevel());
         } catch (\Exception $e) {
-            printf("Unexpected error: %s\n", $e->getMessage());
+            self::$__climate->lightRed(sprintf("Unexpected error: %s", $e->getMessage()));
             exit(1);
         }
     }
@@ -158,6 +167,14 @@ class Environment {
      */
     static public function getLogger() {
        return self::$__logger;
+    }
+
+    /**
+     * Print a message.
+     * @param string $in_message Message to print.
+     */
+    static public function out($in_message) {
+        self::$__climate->out($in_message);
     }
 
     /**
