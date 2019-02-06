@@ -55,12 +55,16 @@ class Environment {
     /**
      * Initialise the environment container.
      * @param array $in_specific_args Climate specifications for the specific script.
-     * @throws Exception
      */
     static public function init(array $in_specific_args)
     {
         self::$__climate = new CLImate();
-        self::$__climate->arguments->add(array_merge(CLI_COMMON_CONFIGURATION, $in_specific_args));
+        try {
+            self::$__climate->arguments->add(array_merge(CLI_COMMON_CONFIGURATION, $in_specific_args));
+        } catch (\Exception $e) {
+            printf("Unexpected error: %s\n", $e->getMessage());
+            exit(1);
+        }
 
         // Parse the command line.
         try {
@@ -89,7 +93,12 @@ class Environment {
             self::$__logPath = sprintf('%s%s%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $log->getName());
         }
 
-        self::$__logger = new Logger(self::$__logPath, self::$__configuration->getLog()->getLevel());
+        try {
+            self::$__logger = new Logger(self::$__logPath, self::$__configuration->getLog()->getLevel());
+        } catch (\Exception $e) {
+            printf("Unexpected error: %s\n", $e->getMessage());
+            exit(1);
+        }
     }
 
     /**
