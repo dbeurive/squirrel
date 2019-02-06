@@ -14,7 +14,7 @@ define('CLI_SPECIFIC_CONFIGURATION', array(
     CLA_TASK => array(
         'description'  => 'Name of the task to perform.',
         'required'     => true
-    ),
+    )
 ));
 
 /**

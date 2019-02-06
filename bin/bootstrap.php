@@ -75,7 +75,7 @@ class Environment {
         try {
             self::$__climate->arguments->parse();
         } catch (\Exception $e) {
-            self::$__climate->lightRed(sprintf("Invalid command line: %s", $e->getMessage()));
+            self::$__climate->backgroundLightRed()->black(sprintf("Invalid command line: %s", $e->getMessage()));
             self::$__climate->out("\nUsage:\n");
             self::$__climate->out(call_user_func(self::$__help));
             exit(1);
@@ -178,6 +178,46 @@ class Environment {
     }
 
     /**
+     * Print an information.
+     * @param string $in_message Message to print.
+     */
+    static public function outInfo($in_message) {
+        self::$__climate->out($in_message);
+    }
+
+    /**
+     * Print a success message.
+     * @param string $in_message Message to print.
+     */
+    static public function outSuccess($in_message) {
+        self::$__climate->lightGreen($in_message);
+    }
+
+    /**
+     * Print a warning message.
+     * @param string $in_message Message to print.
+     */
+    static public function outWarning($in_message) {
+        self::$__climate->yellow($in_message);
+    }
+
+    /**
+     * Print an error message.
+     * @param string $in_message Message to print.
+     */
+    static public function outError($in_message) {
+        self::$__climate->backgroundLightYellow()->black($in_message);
+    }
+
+    /**
+     * Print a fatal error message.
+     * @param string $in_message Message to print.
+     */
+    static public function outFatal($in_message) {
+        self::$__climate->backgroundLightRed()->white($in_message);
+    }
+
+    /**
      * Report a debug message.
      * @param string $in_message The information to report.
      * @throws Exception
@@ -234,7 +274,7 @@ class Environment {
     static public function error($in_message) {
         self::$__logger->error($in_message);
         if (self::$__cloVerbose) {
-            self::$__climate->red($in_message);
+            self::$__climate->backgroundLightYellow()->black($in_message);
         }
     }
 
@@ -245,9 +285,7 @@ class Environment {
      */
     static public function fatal($in_message) {
         self::$__logger->fatal($in_message);
-        if (self::$__cloVerbose) {
-            self::$__climate->lightRed(sprintf('FATAL ERROR: %s', $in_message));
-        }
+        self::$__climate->backgroundLightRed()->white($in_message);
         exit(1);
     }
 }

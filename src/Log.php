@@ -72,4 +72,19 @@ class Log
     public function fileTimestamped() {
         return $this->__fileTimestamped;
     }
+
+    /**
+     * Parse a given line of LOG.
+     * @param string $in_line The line of LOG to parse.
+     * @return LogLine The object that represents a line of LOG.
+     * @throws Exception
+     */
+    static public function parse($in_line) {
+        $fields = explode(' ', $in_line, 5);
+        return new LogLine($fields[0],
+            $fields[1],
+            $fields[2],
+            $fields[3],
+            $fields[4]);
+    }
 }
