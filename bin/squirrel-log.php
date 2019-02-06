@@ -20,7 +20,7 @@ define('CLI_SPECIFIC_CONFIGURATION', array(
  * Print the help.
  */
 $help = function() {
-    printf("php %s\n", basename(__FILE__));
+    printf("php %s [-p|--problem]\n", basename(__FILE__));
 };
 
 Environment::init(CLI_SPECIFIC_CONFIGURATION, $help);

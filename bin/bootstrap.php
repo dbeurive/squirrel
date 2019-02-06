@@ -78,6 +78,8 @@ class Environment {
             self::$__climate->backgroundLightRed()->black(sprintf("Invalid command line: %s", $e->getMessage()));
             self::$__climate->out("\nUsage:\n");
             self::$__climate->out(call_user_func(self::$__help));
+            self::$__climate->out("Options: [-v|--verbose] [-c|--config <path to config file>]");
+            self::$__climate->out("         [-c|--config <path to config file>]\n");
             exit(1);
         }
 
