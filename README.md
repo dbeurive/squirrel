@@ -131,6 +131,10 @@ You can list all the backups stored on a designated destination:
     php squirrel-ls.php \
         [(--config|-c) /path/to/the/config/file] \
         [(--verbose|-v)] \
+        [(--pretty|-p)] \
         <name of the destination>        
 
+Specific options:
+    
+* The option `--pretty` (or `-p`) will trigger a "pretty" rendering of the files names.
 
