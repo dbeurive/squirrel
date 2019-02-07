@@ -97,12 +97,21 @@ class Environment {
         // Open the LOG file.
         $timestamp = strftime('%Y%m%d');
         $log = self::$__configuration->getLog();
+        $log_path = null;
 
         if ($log->fileTimestamped()) {
-            self::$__logPath = realpath(sprintf('%s%s%s-%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $timestamp, $log->getName()));
+            $log_path = sprintf('%s%s%s-%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $timestamp, $log->getName());
         } else {
-            self::$__logPath = realpath(sprintf('%s%s%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $log->getName()));
+            $log_path = sprintf('%s%s%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $log->getName());
         }
+
+        if (! file_exists($log_path)) {
+            if (! touch($log_path)) {
+                throw new \Exception(sprintf('Cannot create the LOG file "%s"!', $log_path));
+            }
+        }
+
+        self::$__logPath = realpath($log_path);
 
         try {
             self::$__logger = new Logger(self::$__logPath, self::$__configuration->getLog()->getLevel());
