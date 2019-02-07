@@ -171,6 +171,14 @@ class Environment {
        return self::$__logger;
     }
 
+    /**
+     * Return the CLImare object.
+     * @return CLImate the CLImare object.
+     */
+    static function getClimate() {
+        return self::$__climate;
+    }
+
     // ------------------------------------------------------------------------------------
     // Methods intended to be used to print message to the console only.
     // ------------------------------------------------------------------------------------

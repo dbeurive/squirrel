@@ -3,13 +3,21 @@
 include __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 use dbeurive\Squirrel\Destination;
+use dbeurive\Squirrel\File;
 
 define('CLA_DESTINATION', 'destination');
+define('CLO_PRETTY', 'pretty');
 
 define('CLI_SPECIFIC_CONFIGURATION', array(
     CLA_DESTINATION => array(
         'description'  => 'Name of the destination.',
         'required'     => true
+    ),
+    CLO_PRETTY => array(
+        'prefix'       => 'p',
+        'longPrefix'   => 'pretty',
+        'description'  => 'Produce a pretty output.',
+        'noValue'      => true
     )
 ));
 
@@ -26,6 +34,7 @@ $help = function() {
 
 Environment::init(CLI_SPECIFIC_CONFIGURATION, $help);
 $cla_destination = strtolower(Environment::getClaValue(CLA_DESTINATION));
+$clo_pretty = Environment::getCloValue(CLO_PRETTY);
 
 $config = Environment::getConfiguration();
 if (! $config->isDestinationConfigured($cla_destination)) {
@@ -49,6 +58,31 @@ if (false === $backups = $destination->inventory(0, $to_keep, $error_message)) {
 }
 
 foreach ($backups as $_name) {
-    Environment::out($_name);
+    if ($clo_pretty) {
+        pretty($_name);
+    } else {
+        Environment::out($_name);
+    }
+
+}
+
+/**
+ * Print a file basename in a pretty fashion.
+ * @param string $in_file_basename Name of the file.
+ * @throws \dbeurive\Squirrel\Exception
+ */
+function pretty($in_file_basename) {
+    $file = File::basenameToFile($in_file_basename);
+    $timestamp = $file->getTimestamp();
+    $file_id = $file->getId();
+
+    Environment::getClimate()->backgroundBlack()->lightYellow()->inline($timestamp->getYear());
+    Environment::getClimate()->backgroundBlack()->lightGray()->inline($timestamp->getMonth());
+    Environment::getClimate()->backgroundBlack()->lightYellow()->inline($timestamp->getDay());
+    Environment::getClimate()->backgroundWhite()->red()->inline($timestamp->getHour());
+    Environment::getClimate()->backgroundWhite()->green()->inline($timestamp->getMinute());
+    Environment::getClimate()->backgroundWhite()->red()->inline($timestamp->getSecond());
+    Environment::getClimate()->inline('-');
+    Environment::getClimate()->out($file_id);
 }
 
