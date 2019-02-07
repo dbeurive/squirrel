@@ -32,6 +32,35 @@ You can delete all files related to unit tests.
 
 # Configuration
 
+The configuration presents 3 main entries:
+
+* An entry that defines some parameters that apply to the LOG file.
+* An entry that defines the _destinations_.
+* An entry that defines the _tasks_.
+
+**Destinations** are (remote) locations where the files to back up are transferred.
+A destination is represented by 3 main parameters: a (remote) host, an FTP user, and a path to a (remote) directory (on the specified host).
+Files to back up are transferred to the (remote) host, through FTP, using the specified user account, and are stored into
+the given (remote) directory.
+
+**Tasks** define the (local) files to back up and where these files must be transferred.
+A task is represented by 3 main parameters: a _file ID_, a local directory (where the files to back up are stored)
+and a list of _destinations_.
+
+The names of the files to back up must respect the convention below:
+
+* The name of the file begins with a timestamp "`YYYYMMDDHHMMSS`".
+* The (prefixed) timestamp is followed by an en dash ("`-`").
+* Then the name of the file ends with the **file ID**. The _file ID_ can by any string.
+
+Examples of valid names for files to back up:
+
+* `20000101120002-file1.txt`: the _file ID_ is "`file1.txt`".
+* `20000101120003-file1.txt`: the _file ID_ is "`file1.txt`".
+* `20000101120003-db.tar.gz`: the _file ID_ is "`db.tar.gz`".
+
+> In the examples above, we see two files to back up with the same _file ID_ ("`file1.txt`"), but different timestamps.
+
 The configuration file is described in this [this document](config/README.md).
 
 # Usage
