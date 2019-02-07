@@ -36,7 +36,14 @@ The configuration file is described in this [this document](config/README.md).
 
 # Usage
 
-This section presents all the available commands. For all these commands the command line options listed below apply:
+This section presents all the available commands.
+
+* **`squirrel-exec.php`**: execute a task (send files to remote secure storage).
+* **`squirrel-list.php`**: list available tasks or destinations.
+* **`squirrel-log.php`**: print the LOG file in a easy to read presentation.
+* **`squirrel-ls.php`**: list the backups stored on a given destination.
+
+For all these commands the command line options listed below apply:
 
 * `--config <path to the configuration file>` (or `-c <path to the configuration file>`): specify an alternative configuration file.
   The default LOG file is `config/squirrel.json`.
@@ -73,9 +80,9 @@ To print the list of configured destinations:
     ovh-secure-storage-1
     ovh-secure-storage-2
 
-## Print the LOG file in an easy to read format 
+## Print the LOG file in an easy to read presentation 
     
-You can print the LOG file in an easy to read format: 
+You can print the LOG file in an easy to read presentation: 
         
     php squirrel-log.php \
         [-p|--problems] \
@@ -86,5 +93,13 @@ Specific options:
     
 * The option `--problem` (or `-p`) will filter the lines of LOG and keep only the lines tagged `WARNING`, `ERROR` or `FATAL`.
 
+## List the backups stored on a given destination
+
+You can list all the backups stored on a designated destination:
+
+    php squirrel-ls.php \
+        [(--config|-c) /path/to/the/config/file] \
+        [(--verbose|-v)] \
+        <name of the destination>        
 
 

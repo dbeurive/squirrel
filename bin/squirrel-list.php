@@ -6,12 +6,13 @@ use dbeurive\Squirrel\Configuration;
 
 
 define('CLA_TYPE', 'type');
+define('CLA_DESTINATION', 'destination');
 
 define('CLI_SPECIFIC_CONFIGURATION', array(
     CLA_TYPE => array(
         'description'  => 'Type of the element to list (task or destination).',
         'required'     => true
-    ),
+    )
 ));
 
 define('TYPE_TASK', 'task');

@@ -154,9 +154,12 @@ class Destination
     /**
      * Inventory the files stored on the destination and lists the expired ones.
      * @param int $in_keep_count Number of backups to keep on this destination.
+     *        Set the value to 0 if you don't care about expired files.
      * @param array $out_expired Reference to an array used to store the expired backups.
+     *        If the value of "$in_keep_count" is 0, then this parameter is of no use.
      * @param string Reference to a string used to store an error message.
-     * @return array|bool Upon successful completion, the method returns the list of backups found on this destination.
+     * @return string[]|bool Upon successful completion, the method returns the list of backups found on this destination.
+     *         backups are designated by their basenames.
      *         Otherwise, the method returns the value false.
      * @throws Exception
      */

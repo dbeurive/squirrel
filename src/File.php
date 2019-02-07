@@ -163,7 +163,9 @@ class File
      * Gather a given list of instances of the class File according to their timestamps.
      * @param File[] $in_files List of instances of the class File to gather.
      * @param int $in_opt_keep Number of instances of the class File to keep.
+     *        Set the value to 0 if you don't care about expired files.
      * @param string[] $out_opt_expired_timestamps Reference to an array used to store the expired timestamps.
+     *        If the value of "$in_opt_keep" is 0, then this parameter is of no use.
      * @return array The method returns an associative array the contains the gathered files.
      *         - Keys are timestamps. Ex: 20190201000002.
      *         - Values are lists of instances of the class File.
