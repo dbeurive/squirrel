@@ -191,13 +191,26 @@ class Destination
         $expired_timestamps = array();
         $files = File::gatherByTimestamp($files, $in_keep_count, $expired_timestamps);
 
+        // Create the list of basenames that represent the expired backups.
         /** @var string $_timestamp */
         foreach ($expired_timestamps as $_timestamp) {
             $out_expired = array_merge($out_expired,
-                array_map(function (File $e) { return $e->getBasename() ; }, $files[$_timestamp]));
+                array_map(function (File $e) { return $e->getBasename(); }, $files[$_timestamp]));
         }
 
-        return $basenames;
+        // Create the list of basenames that represent all the backups
+        $list = array();
+        /**
+         * @var string $_timestamp
+         * @var File[] $_files
+         */
+        foreach ($files as $_timestamp => $_files) {
+            $list = array_merge($list,
+                array_map(function (File $e) { return $e->getBasename(); }, $_files)
+            );
+        }
+
+        return $list;
     }
 
     /**
