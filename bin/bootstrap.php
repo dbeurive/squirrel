@@ -44,7 +44,7 @@ class Environment {
     /** @var bool */
     static private $__cloVerbose;
     /** @var string */
-    static private $__cloConfiguration;
+    static private $__cloConfigurationPath;
     /** @var string */
     static private $__logPath;
     /** @var Configuration */
@@ -83,14 +83,14 @@ class Environment {
             exit(1);
         }
 
-        self::$__cloConfiguration = self::$__climate->arguments->get(CLO_CONF);
+        self::$__cloConfigurationPath = realpath(self::$__climate->arguments->get(CLO_CONF));
         self::$__cloVerbose = self::$__climate->arguments->get(CLO_VERBOSE);
 
         // Load the configuration. This action may throw an exception.
         try {
-            self::$__configuration = new Configuration(self::$__cloConfiguration, realpath(dirname(self::$__cloConfiguration)));
+            self::$__configuration = new Configuration(self::$__cloConfigurationPath, realpath(dirname(self::$__cloConfigurationPath)));
         } catch (\Exception $e) {
-            self::$__climate->lightRed(sprintf('Invalid configuration file "%s": %s', realpath(dirname(self::$__cloConfiguration)), $e->getMessage()));
+            self::$__climate->lightRed(sprintf('Invalid configuration file "%s": %s', realpath(dirname(self::$__cloConfigurationPath)), $e->getMessage()));
             exit(1);
         }
 
@@ -99,9 +99,9 @@ class Environment {
         $log = self::$__configuration->getLog();
 
         if ($log->fileTimestamped()) {
-            self::$__logPath = sprintf('%s%s%s-%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $timestamp, $log->getName());
+            self::$__logPath = realpath(sprintf('%s%s%s-%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $timestamp, $log->getName()));
         } else {
-            self::$__logPath = sprintf('%s%s%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $log->getName());
+            self::$__logPath = realpath(sprintf('%s%s%s', $log->getDirectory(), DIRECTORY_SEPARATOR, $log->getName()));
         }
 
         try {
@@ -134,7 +134,7 @@ class Environment {
      * @return string The configuration file that has been loaded.
      */
     static public function getCloConfigurationPath() {
-        return self::$__cloConfiguration;
+        return self::$__cloConfigurationPath;
     }
 
     /**
@@ -171,58 +171,128 @@ class Environment {
        return self::$__logger;
     }
 
+    // ------------------------------------------------------------------------------------
+    // Methods intended to be used to print message to the console only.
+    // ------------------------------------------------------------------------------------
+
     /**
      * Print a message.
      * @param string $in_message Message to print.
+     * @note This method is intended to be used to print message to the console only.
+     * @param bool $in_opt_verbose_dependant This flag determines whether the print of the given message depends on the
+     *        verbosity level or not.
+     *        * The value true indicates that the print of the given message depends on the verbosity level: if the
+     *          verbosity level is not zero, then the message will be printed.
+     *        * The value false indicates that the print of the given message does not depend on the verbosity level.
+     *          The message will be printed.
+     * @note This method is intended to be used to print message to the console only.
      */
-    static public function out($in_message) {
+    static public function out($in_message, $in_opt_verbose_dependant=false) {
+        if ($in_opt_verbose_dependant && ! self::$__cloVerbose) {
+            return;
+        }
         self::$__climate->out($in_message);
     }
 
     /**
      * Print an information.
      * @param string $in_message Message to print.
+     * @param bool $in_opt_verbose_dependant This flag determines whether the print of the given message depends on the
+     *        verbosity level or not.
+     *        * The value true indicates that the print of the given message depends on the verbosity level: if the
+     *          verbosity level is not zero, then the message will be printed.
+     *        * The value false indicates that the print of the given message does not depend on the verbosity level.
+     *          The message will be printed.
+     * @note This method is intended to be used to print message to the console only.
      */
-    static public function outInfo($in_message) {
+    static public function outInfo($in_message, $in_opt_verbose_dependant=false) {
+        if ($in_opt_verbose_dependant && ! self::$__cloVerbose) {
+            return;
+        }
         self::$__climate->out($in_message);
     }
 
     /**
      * Print a success message.
      * @param string $in_message Message to print.
+     * @param bool $in_opt_verbose_dependant This flag determines whether the print of the given message depends on the
+     *        verbosity level or not.
+     *        * The value true indicates that the print of the given message depends on the verbosity level: if the
+     *          verbosity level is not zero, then the message will be printed.
+     *        * The value false indicates that the print of the given message does not depend on the verbosity level.
+     *          The message will be printed.
+     * @note This method is intended to be used to print message to the console only.
      */
-    static public function outSuccess($in_message) {
+    static public function outSuccess($in_message, $in_opt_verbose_dependant=false) {
+        if ($in_opt_verbose_dependant && ! self::$__cloVerbose) {
+            return;
+        }
         self::$__climate->lightGreen($in_message);
     }
 
     /**
      * Print a warning message.
      * @param string $in_message Message to print.
+     * @param bool $in_opt_verbose_dependant This flag determines whether the print of the given message depends on the
+     *        verbosity level or not.
+     *        * The value true indicates that the print of the given message depends on the verbosity level: if the
+     *          verbosity level is not zero, then the message will be printed.
+     *        * The value false indicates that the print of the given message does not depend on the verbosity level.
+     *          The message will be printed.
+     * @note This method is intended to be used to print message to the console only.
      */
-    static public function outWarning($in_message) {
+    static public function outWarning($in_message, $in_opt_verbose_dependant=false) {
+        if ($in_opt_verbose_dependant && ! self::$__cloVerbose) {
+            return;
+        }
         self::$__climate->yellow($in_message);
     }
 
     /**
      * Print an error message.
      * @param string $in_message Message to print.
+     * @param bool $in_opt_verbose_dependant This flag determines whether the print of the given message depends on the
+     *        verbosity level or not.
+     *        * The value true indicates that the print of the given message depends on the verbosity level: if the
+     *          verbosity level is not zero, then the message will be printed.
+     *        * The value false indicates that the print of the given message does not depend on the verbosity level.
+     *          The message will be printed.
+     * @note This method is intended to be used to print message to the console only.
      */
-    static public function outError($in_message) {
+    static public function outError($in_message, $in_opt_verbose_dependant=false) {
+        if ($in_opt_verbose_dependant && ! self::$__cloVerbose) {
+            return;
+        }
         self::$__climate->backgroundLightYellow()->black($in_message);
     }
 
     /**
      * Print a fatal error message.
      * @param string $in_message Message to print.
+     * @param bool $in_opt_verbose_dependant This flag determines whether the print of the given message depends on the
+     *        verbosity level or not.
+     *        * The value true indicates that the print of the given message depends on the verbosity level: if the
+     *          verbosity level is not zero, then the message will be printed.
+     *        * The value false indicates that the print of the given message does not depend on the verbosity level.
+     *          The message will be printed.
+     * @note This method is intended to be used to print message to the console only.
      */
-    static public function outFatal($in_message) {
+    static public function outFatal($in_message, $in_opt_verbose_dependant=false) {
+        if ($in_opt_verbose_dependant && ! self::$__cloVerbose) {
+            return;
+        }
         self::$__climate->backgroundLightRed()->white($in_message);
     }
+
+    // ------------------------------------------------------------------------------------
+    // Methods intended to be used to print message to the console and to the LOG file.
+    // ------------------------------------------------------------------------------------
 
     /**
      * Report a debug message.
      * @param string $in_message The information to report.
      * @throws Exception
+     * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function debug($in_message) {
         self::$__logger->debug($in_message);
@@ -235,6 +305,7 @@ class Environment {
      * Report an information.
      * @param string $in_message The information to report.
      * @throws Exception
+     * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function info($in_message) {
         self::$__logger->info($in_message);
@@ -247,6 +318,7 @@ class Environment {
      * Report a successful operation.
      * @param string $in_message The information to report.
      * @throws Exception
+     * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function success($in_message) {
         self::$__logger->success($in_message);
@@ -259,6 +331,7 @@ class Environment {
      * Report a warning.
      * @param string $in_message The information to report.
      * @throws Exception
+     * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function warning($in_message) {
         self::$__logger->warning($in_message);
@@ -272,6 +345,7 @@ class Environment {
      * Report an error.
      * @param string $in_message Message that describes the error.
      * @throws Exception
+     * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function error($in_message) {
         self::$__logger->error($in_message);
@@ -284,6 +358,7 @@ class Environment {
      * Report a fatal error.
      * @param string $in_message Message that describes the error.
      * @throws Exception
+     * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function fatal($in_message) {
         self::$__logger->fatal($in_message);

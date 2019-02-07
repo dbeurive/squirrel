@@ -35,6 +35,10 @@ if (! in_array($cla_type, array(TYPE_TASK, TYPE_DESTINATION))) {
     Environment::fatal(sprintf('Invalid argument value "%s" !', $cla_type));
 }
 
+Environment::outInfo(sprintf("# Path to the LOG file: %s", Environment::getLogPath()), true);
+Environment::outInfo(sprintf("# Path to the configuration file: %s", Environment::getCloConfigurationPath()), true);
+
+
 $config = Environment::getConfiguration();
 
 if (TYPE_TASK == $cla_type) {

@@ -2,7 +2,7 @@
 
 include __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 use dbeurive\Squirrel\Log;
-use \dbeurive\Log\Logger;
+use dbeurive\Log\Logger;
 
 define('CLO_PROBLEM', 'problem');
 
@@ -14,7 +14,6 @@ define('CLI_SPECIFIC_CONFIGURATION', array(
         'noValue'      => true
     )
 ));
-
 
 /**
  * Print the help.
@@ -28,6 +27,10 @@ Environment::init(CLI_SPECIFIC_CONFIGURATION, $help);
 $clo_problem = Environment::getCloValue(CLO_PROBLEM);
 
 $log = Environment::getLogPath();
+
+Environment::outInfo(sprintf("# Path to the LOG file: %s", $log), true);
+Environment::outInfo(sprintf("# Path to the configuration file: %s", Environment::getCloConfigurationPath()), true);
+
 
 if (false === $fd = fopen($log, 'r')) {
     $error = error_get_last();
