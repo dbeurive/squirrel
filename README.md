@@ -63,6 +63,8 @@ Examples of valid names for files to back up:
 
 The configuration file is described in this [this document](config/README.md).
 
+Example of configuration file: [config/squirrel.json](config/squirrel.json).
+
 # Usage
 
 This section presents all the available commands.
