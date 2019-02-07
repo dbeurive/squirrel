@@ -143,6 +143,7 @@ class File
 
     /**
      * Given a list of basenames, the method returns the corresponding list of instances of the class File.
+     * If some given basenames don't represent backups, then they are ignored.
      * @param array array $in_list list basenames.
      * @return array The method returns the corresponding list of instances of the class File.
      * @throws Exception
@@ -151,6 +152,11 @@ class File
         $properties = array();
         /** @var string $_basename */
         foreach ($in_basenames as $_basename) {
+
+            if (! self::isBasename($_basename)) {
+                continue;
+            }
+
             $file = self::basenameToFile($_basename);
             if (false !== $file) {
                 $properties[] = $file;
