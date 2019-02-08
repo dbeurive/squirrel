@@ -5,6 +5,20 @@ use League\CLImate\CLImate;
 use dbeurive\Log\Logger;
 use dbeurive\Squirrel\Configuration;
 
+
+
+if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+    set_exception_handler(function (Throwable $e) {
+        Environment::fatal($e->getMessage());
+    });
+} else {
+    set_exception_handler(function (\Exception $e) {
+        Environment::fatal($e->getMessage());
+    });
+}
+
+
+
 // Path to the default configuration file.
 define('DEFAULT_CONFIGURATION', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'squirrel.json');
 
@@ -39,8 +53,8 @@ define('CLI_COMMON_CONFIGURATION', array(
  */
 class Environment {
 
-    /** @var CLImate */
-    static private $__climate;
+    /** @var CLImate|false */
+    static private $__climate=false;
     /** @var bool */
     static private $__cloVerbose;
     /** @var string */
@@ -408,8 +422,16 @@ class Environment {
                 // Nothing that can be done!
             }
         }
-        self::$__climate->backgroundLightRed()->white($in_message);
+        if (false !== self::$__climate) {
+            self::$__climate->backgroundLightRed()->white($in_message);
+        } else {
+            fwrite(STDERR, "${in_message}\n");
+        }
+
         exit(1);
     }
 }
+
+
+
 
