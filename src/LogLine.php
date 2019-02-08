@@ -1,15 +1,24 @@
 <?php
 
-namespace dbeurive\Squirrel;
+/**
+ * This file implements the class that represents a line extracted from the application LOG file.
+ */
 
+namespace dbeurive\Squirrel;
 
 use dbeurive\Log\Logger;
 
+/**
+ * Class LogLine
+ *
+ * This class represents a line extracted from the application LOG file.
+ *
+ * @package dbeurive\Squirrel
+ */
 class LogLine
 {
-    const FORMAT_RAW = 0;
-    const FORMAT_LINEARIZED = 1;
-    const FORMAT_UNEXPECTED = 2;
+    const FORMAT_RAW = 0;        // The message was not linearised.
+    const FORMAT_LINEARIZED = 1; // The message was linearised.
 
     /** @var Timestamp */
     private $__timestamp;
@@ -56,37 +65,70 @@ class LogLine
         }
     }
 
+    /**
+     * Get the message in its "human readable" format. If it was linearised, then it is "delinearized".
+     * @return string The message.
+     */
     public function getMessage() {
         return $this->__message;
     }
 
+    /**
+     * Get the raw message. If it was linearised, then it is not "delinearized".
+     * @return string The raw message.
+     */
     public function getRawMessage() {
         return $this->__rawMessage;
     }
 
+    /**
+     * Return the timestamp.
+     * @return Timestamp The timestamp.
+     */
     public function getTimestamp() {
         return $this->__timestamp;
     }
 
+    /**
+     * Return the session ID.
+     * @return string The session ID.
+     */
     public function getSessionId() {
         return $this->__session;
     }
 
+    /**
+     * Get the text that represents the message LOG level.
+     * @return bool The text that represents the message LOG level.
+     */
     public function getLevelAsText() {
         return $this>$this->__levelText;
     }
 
+    /**
+     * Get the integer value that represents the message LOG level.
+     * @return bool|int The integer value that represents the message LOG level.
+     */
     public function getLevelAsInt() {
         return $this->__levelInt;
     }
 
+    /**
+     * Test whether a message is linearized or not.
+     * @return bool If the message is linearized, then the method returns the value true.
+     *         Otherwise, it returns the value false.
+     */
     public function isLinearized() {
         return self::FORMAT_LINEARIZED == $this->__formatCode;
     }
 
     /**
-     * @param $in_format
-     * @return int
+     * Get the internal code that identifies the format (linearized or not) of the message that was extracted from the
+     * line of LOG.
+     * @param string $in_format The textual representation of the format ("R":raw or "L":linearised).
+     * @return int The method returns one of the value listed below:
+     *         - FORMAT_LINEARIZED: the message was linearised.
+     *         - FORMAT_RAW: the message was not linearised.
      * @throws Exception
      */
     static private function __getFormatCode($in_format) {
