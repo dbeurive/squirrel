@@ -49,8 +49,8 @@ class Environment {
     static private $__logPath;
     /** @var Configuration */
     static private $__configuration;
-    /** @var Logger */
-    static private $__logger;
+    /** @var Logger|false */
+    static private $__logger=false;
     /** @var callable */
     static private $__help;
 
@@ -61,21 +61,21 @@ class Environment {
      */
     static public function init(array $in_specific_args, callable $in_help_printer)
     {
-        self::$__help = $in_help_printer;
-
         self::$__climate = new CLImate();
         try {
             self::$__climate->arguments->add(array_merge(CLI_COMMON_CONFIGURATION, $in_specific_args));
         } catch (\Exception $e) {
-            sprintf("Unexpected error: %s\n", $e->getMessage());
+            printf("Unexpected error: %s\n", $e->getMessage());
             exit(1);
         }
+
+        self::$__help = $in_help_printer;
 
         // Parse the command line.
         try {
             self::$__climate->arguments->parse();
         } catch (\Exception $e) {
-            self::$__climate->backgroundLightRed()->black(sprintf("Invalid command line: %s", $e->getMessage()));
+            self::$__climate->backgroundLightRed()->white(sprintf("Invalid command line: %s", $e->getMessage()));
             self::$__climate->out("\nUsage:\n");
             self::$__climate->out(call_user_func(self::$__help));
             self::$__climate->out("Options: [-v|--verbose] [-c|--config <path to config file>]");
@@ -83,15 +83,18 @@ class Environment {
             exit(1);
         }
 
-        self::$__cloConfigurationPath = realpath(self::$__climate->arguments->get(CLO_CONF));
+        $config_path = self::$__climate->arguments->get(CLO_CONF);
+        if (false === self::$__cloConfigurationPath = realpath($config_path)) {
+            self::fatal(sprintf('The configuration file "%s" does not exist or is not accessible.', $config_path));
+        }
+
         self::$__cloVerbose = self::$__climate->arguments->get(CLO_VERBOSE);
 
         // Load the configuration. This action may throw an exception.
         try {
             self::$__configuration = new Configuration(self::$__cloConfigurationPath, realpath(dirname(self::$__cloConfigurationPath)));
         } catch (\Exception $e) {
-            self::$__climate->lightRed(sprintf('Invalid configuration file "%s": %s', realpath(dirname(self::$__cloConfigurationPath)), $e->getMessage()));
-            exit(1);
+            self::fatal(sprintf('Invalid configuration file "%s": %s', realpath(dirname(self::$__cloConfigurationPath)), $e->getMessage()));
         }
 
         // Open the LOG file.
@@ -107,17 +110,18 @@ class Environment {
 
         if (! file_exists($log_path)) {
             if (! touch($log_path)) {
-                throw new \Exception(sprintf('Cannot create the LOG file "%s"!', $log_path));
+                self::fatal(sprintf('Cannot create the LOG file "%s"!', $log_path));
             }
         }
 
-        self::$__logPath = realpath($log_path);
+        if (false === self::$__logPath = realpath($log_path)) {
+            self::fatal(sprintf('Unexpected error: cannot get the real path of the LOG file "%s".', $log_path));
+        }
 
         try {
             self::$__logger = new Logger(self::$__logPath, self::$__configuration->getLog()->getLevel());
         } catch (\Exception $e) {
-            self::$__climate->lightRed(sprintf("Unexpected error: %s", $e->getMessage()));
-            exit(1);
+            self::fatal(sprintf("Unexpected error: %s", $e->getMessage()));
         }
     }
 
@@ -308,11 +312,15 @@ class Environment {
     /**
      * Report a debug message.
      * @param string $in_message The information to report.
-     * @throws Exception
      * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function debug($in_message) {
-        self::$__logger->debug($in_message);
+        try {
+            self::$__logger->debug($in_message);
+        } catch (\Exception $e) {
+            fwrite(STDERR, sprintf("Unexpected error! Cannot write in my LOG file \"%s\"", self::$__logPath));
+        }
+
         if (self::$__cloVerbose) {
             self::$__climate->lightGray($in_message);
         }
@@ -321,11 +329,15 @@ class Environment {
     /**
      * Report an information.
      * @param string $in_message The information to report.
-     * @throws Exception
      * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function info($in_message) {
-        self::$__logger->info($in_message);
+        try {
+            self::$__logger->info($in_message);
+        } catch (\Exception $e) {
+            fwrite(STDERR, sprintf("Unexpected error! Cannot write in my LOG file \"%s\"", self::$__logPath));
+        }
+
         if (self::$__cloVerbose) {
             self::$__climate->out($in_message);
         }
@@ -334,11 +346,15 @@ class Environment {
     /**
      * Report a successful operation.
      * @param string $in_message The information to report.
-     * @throws Exception
      * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function success($in_message) {
-        self::$__logger->success($in_message);
+        try {
+            self::$__logger->success($in_message);
+        } catch (\Exception $e) {
+            fwrite(STDERR, sprintf("Unexpected error! Cannot write in my LOG file \"%s\"\n", self::$__logPath));
+        }
+
         if (self::$__cloVerbose) {
             self::$__climate->green($in_message);
         }
@@ -347,11 +363,15 @@ class Environment {
     /**
      * Report a warning.
      * @param string $in_message The information to report.
-     * @throws Exception
      * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function warning($in_message) {
-        self::$__logger->warning($in_message);
+        try {
+            self::$__logger->warning($in_message);
+        } catch (\Exception $e) {
+            fwrite(STDERR, sprintf("Unexpected error! Cannot write in my LOG file \"%s\"\n", self::$__logPath));
+        }
+
         if (self::$__cloVerbose) {
             self::$__climate->yellow($in_message);
         }
@@ -361,11 +381,15 @@ class Environment {
     /**
      * Report an error.
      * @param string $in_message Message that describes the error.
-     * @throws Exception
      * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function error($in_message) {
-        self::$__logger->error($in_message);
+        try {
+            self::$__logger->error($in_message);
+        } catch (\Exception $e) {
+            fwrite(STDERR, sprintf("Unexpected error! Cannot write in my LOG file \"%s\"\n", self::$__logPath));
+        }
+
         if (self::$__cloVerbose) {
             self::$__climate->backgroundLightYellow()->black($in_message);
         }
@@ -374,11 +398,16 @@ class Environment {
     /**
      * Report a fatal error.
      * @param string $in_message Message that describes the error.
-     * @throws Exception
      * @note This method is intended to be used to print message to the console and to the LOG file.
      */
     static public function fatal($in_message) {
-        self::$__logger->fatal($in_message);
+        if (false !== self::$__logger) {
+            try {
+                self::$__logger->fatal($in_message);
+            } catch (\Exception $e) {
+                // Nothing that can be done!
+            }
+        }
         self::$__climate->backgroundLightRed()->white($in_message);
         exit(1);
     }
