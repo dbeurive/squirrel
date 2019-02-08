@@ -2,6 +2,12 @@
 
 This repository contains a script that performs backups over FTP.
 
+Features:
+
+* Send files over FTP to remote hosts.
+* Print the list of backed up files on the remote hosts.
+* Generate an easy to use LOG file.
+
 # Installation
 
 ## Prerequisite
