@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "dbeurive/squirrel",
   "description": "This project implements a simple backup manager that uses FTP",
   "license": "MIT",
@@ -17,7 +17,7 @@
   },
   "require": {
     "php": ">=5.6.0",
-    "dbeurive/ftp": "3.0.3",
+    "dbeurive/ftp": "3.0.4",
     "dbeurive/log": "2.0.4",
     "league/climate": "3.4.1"
   },
